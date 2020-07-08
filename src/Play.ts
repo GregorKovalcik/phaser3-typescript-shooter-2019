@@ -3,6 +3,10 @@ import { Enemy } from "./Enemies/Enemy";
 import { Enemy1 } from "./Enemies/Enemy1";
 import { Enemy2 } from "./Enemies/Enemy2";
 import { Enemy3 } from "./Enemies/Enemy3";
+import { Asteroid } from "./Asteroids/Asteroid";
+import { AsteroidBig } from "./Asteroids/AsteroidBig";
+import { AsteroidMedium } from "./Asteroids/AsteroidMedium";
+import { AsteroidSmall } from "./Asteroids/AsteroidSmall";
 
 export class Play extends Phaser.Scene {
 
@@ -19,7 +23,12 @@ export class Play extends Phaser.Scene {
     enemies2: Phaser.Physics.Arcade.Group;
     enemies3: Phaser.Physics.Arcade.Group;
 
-    lastSpawn: number = 0;
+    // this will act as a pool for Asteroid(s) as well as "Unity collision layer"
+    asteroids: Phaser.Physics.Arcade.Group;
+
+
+    lastEnemySpawn: number = 0;
+    lastAsteroidSpawn: number = 0;
 
     score: number = 0;
 
@@ -105,6 +114,13 @@ export class Play extends Phaser.Scene {
             runChildUpdate: true
         });
 
+        // ASTEROID GROUP
+        this.asteroids = this.physics.add.group({
+            classType: AsteroidBig,
+            maxSize: 10,
+            runChildUpdate: true
+        });
+
         // LASERS kill ENEMIES
         this.physics.add.collider(this.lasers, this.enemies1, this.collideLaserEnemy, null, this); // last parameter is the context passed into the callback
         this.physics.add.collider(this.lasers, this.enemies2, this.collideLaserEnemy, null, this);
@@ -130,10 +146,10 @@ export class Play extends Phaser.Scene {
             } 
         }
 
-        this.lastSpawn -= delta;
+        // SPAWN ENEMY    
+        this.lastEnemySpawn -= delta;
 
-        if (this.lastSpawn < 0) {
-            // SPAWN ENEMY
+        if (this.lastEnemySpawn < 0) {
             var enemyGroup = this.enemies1;
             var nEnemyTypes = 3;
             switch(Math.floor(Math.random() * nEnemyTypes))
@@ -148,13 +164,26 @@ export class Play extends Phaser.Scene {
                     enemyGroup = this.enemies3;
                     break;
             }
+
             let e : Enemy = enemyGroup.get() as Enemy;
-            
-            
             if (e) { 
               e.launch(Phaser.Math.Between(50, 400), -50);     
             }
-            this.lastSpawn += 1000;
+            
+            this.lastEnemySpawn += 1000;
+        }
+
+        // SPAWN ASTEROID    
+        this.lastAsteroidSpawn -= delta;
+
+        if (this.lastAsteroidSpawn < 0) {
+            
+            let e : Asteroid = this.asteroids.get() as Asteroid;
+            if (e) { 
+              e.launch(Phaser.Math.Between(50, 400), -50);     
+            }
+            
+            this.lastAsteroidSpawn += 5000;
         }
     }
 

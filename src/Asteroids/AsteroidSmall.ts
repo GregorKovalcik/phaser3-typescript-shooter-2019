@@ -8,8 +8,8 @@
             super(
               scene, 
               AsteroidSmall.textures[Math.floor(Math.random() * AsteroidSmall.textures.length)],
-              0.6,
-              Phaser.Math.GetSpeed(20, 1)
+              0.5,
+              Phaser.Math.GetSpeed(80, 1)
               );
         }
   
