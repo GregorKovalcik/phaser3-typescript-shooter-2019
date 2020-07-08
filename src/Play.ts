@@ -1,4 +1,4 @@
-import { Bullet } from "./Bullet";
+import { Bullet } from "./Projectiles/Bullet";
 import { Enemy } from "./Enemies/Enemy";
 import { Enemy1 } from "./Enemies/Enemy1";
 import { Enemy2 } from "./Enemies/Enemy2";
@@ -136,7 +136,7 @@ export class Play extends Phaser.Scene {
             // SPAWN ENEMY
             var enemyGroup = this.enemies1;
             var nEnemyTypes = 3;
-            switch(Math.floor(Math.random() * Math.floor(nEnemyTypes)))
+            switch(Math.floor(Math.random() * nEnemyTypes))
             {
                 case 0: 
                     enemyGroup = this.enemies1;
