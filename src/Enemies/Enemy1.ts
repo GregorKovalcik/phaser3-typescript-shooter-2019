@@ -5,5 +5,5 @@
         constructor( scene: Phaser.Scene ) {
             super(scene, "enemy1");
         }
-  
+        
     }
