@@ -24,7 +24,9 @@ export class Play extends Phaser.Scene {
     enemies3: Phaser.Physics.Arcade.Group;
 
     // this will act as a pool for Asteroid(s) as well as "Unity collision layer"
-    asteroids: Phaser.Physics.Arcade.Group;
+    asteroidsBig: Phaser.Physics.Arcade.Group;
+    asteroidsMedium: Phaser.Physics.Arcade.Group;
+    asteroidsSmall: Phaser.Physics.Arcade.Group;
 
 
     lastEnemySpawn: number = 0;
@@ -115,9 +117,19 @@ export class Play extends Phaser.Scene {
         });
 
         // ASTEROID GROUP
-        this.asteroids = this.physics.add.group({
+        this.asteroidsBig = this.physics.add.group({
             classType: AsteroidBig,
             maxSize: 10,
+            runChildUpdate: true
+        });
+        this.asteroidsMedium = this.physics.add.group({
+            classType: AsteroidMedium,
+            maxSize: 20,
+            runChildUpdate: true
+        });
+        this.asteroidsSmall = this.physics.add.group({
+            classType: AsteroidSmall,
+            maxSize: 40,
             runChildUpdate: true
         });
 
@@ -127,7 +139,9 @@ export class Play extends Phaser.Scene {
         this.physics.add.collider(this.lasers, this.enemies3, this.collideLaserEnemy, null, this);
 
         // LASERS splits ASTEROIDS
-        this.physics.add.collider(this.lasers, this.asteroids, this.collideLaserAsteroid, null, this);
+        this.physics.add.collider(this.lasers, this.asteroidsBig, this.collideLaserAsteroid, null, this);
+        this.physics.add.collider(this.lasers, this.asteroidsMedium, this.collideLaserAsteroid, null, this);
+        this.physics.add.collider(this.lasers, this.asteroidsSmall, this.collideLaserAsteroid, null, this);
 
 
         // PLAYER is killed by ENEMIES
@@ -136,7 +150,9 @@ export class Play extends Phaser.Scene {
         this.physics.add.collider(this.player, this.enemies3, this.collidePlayerEnemy, null, this);
 
         // PLAYER is killed by ASTEROIDS
-        this.physics.add.collider(this.player, this.asteroids, this.collidePlayerAsteroid, null, this);
+        this.physics.add.collider(this.player, this.asteroidsBig, this.collidePlayerAsteroid, null, this);
+        this.physics.add.collider(this.player, this.asteroidsMedium, this.collidePlayerAsteroid, null, this);
+        this.physics.add.collider(this.player, this.asteroidsSmall, this.collidePlayerAsteroid, null, this);
 
 
         // SCORE TEXT
@@ -186,7 +202,7 @@ export class Play extends Phaser.Scene {
 
         if (this.lastAsteroidSpawn < 0) {
             
-            let e : Asteroid = this.asteroids.get() as Asteroid;
+            let e : Asteroid = this.asteroidsBig.get() as Asteroid;
             if (e) { 
               e.launch(Phaser.Math.Between(50, 400), -50);     
             }
@@ -232,7 +248,24 @@ export class Play extends Phaser.Scene {
 
         laser.setActive(false).setVisible(false);
         asteroid.setActive(false).setVisible(false);
-        
+
+        // split big asteroids
+        if (asteroid instanceof AsteroidBig){
+            let left : AsteroidMedium = this.asteroidsMedium.get() as AsteroidMedium;
+            let right : AsteroidMedium = this.asteroidsMedium.get() as AsteroidMedium;
+            if (left && right) { 
+                left.launch(asteroid.x - 30, asteroid.y);     
+                right.launch(asteroid.x + 30, asteroid.y);
+            }
+        }
+        if (asteroid instanceof AsteroidMedium){
+            let left : AsteroidSmall = this.asteroidsSmall.get() as AsteroidSmall;
+            let right : AsteroidSmall = this.asteroidsSmall.get() as AsteroidSmall;
+            if (left && right) { 
+                left.launch(asteroid.x - 15, asteroid.y);     
+                right.launch(asteroid.x + 15, asteroid.y);
+            }
+        }
     }
 
     collidePlayerEnemy(player: Phaser.Physics.Arcade.Sprite, enemy: Enemy) { 
