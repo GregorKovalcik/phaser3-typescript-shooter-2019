@@ -126,10 +126,18 @@ export class Play extends Phaser.Scene {
         this.physics.add.collider(this.lasers, this.enemies2, this.collideLaserEnemy, null, this);
         this.physics.add.collider(this.lasers, this.enemies3, this.collideLaserEnemy, null, this);
 
+        // LASERS splits ASTEROIDS
+        this.physics.add.collider(this.lasers, this.asteroids, this.collideLaserAsteroid, null, this);
+
+
         // PLAYER is killed by ENEMIES
         this.physics.add.collider(this.player, this.enemies1, this.collidePlayerEnemy, null, this); // last parameter is the context passed into the callback
         this.physics.add.collider(this.player, this.enemies2, this.collidePlayerEnemy, null, this);
         this.physics.add.collider(this.player, this.enemies3, this.collidePlayerEnemy, null, this);
+
+        // PLAYER is killed by ASTEROIDS
+        this.physics.add.collider(this.player, this.asteroids, this.collidePlayerAsteroid, null, this);
+
 
         // SCORE TEXT
         this.scoreText = this.add.text(5, 5, "Score: 0", { fontFamily: "Arial Black", fontSize: 12, color: "#33ff33", align: 'left' }).setStroke('#333333', 1);
@@ -207,7 +215,7 @@ export class Play extends Phaser.Scene {
         }
     }
 
-    collideLaserEnemy(laser: Bullet, enemy: Enemy1) { 
+    collideLaserEnemy(laser: Bullet, enemy: Enemy) { 
         if (!laser.active) return;
         if (!enemy.active) return;
 
@@ -218,12 +226,31 @@ export class Play extends Phaser.Scene {
         this.scoreText.text = "Score: " + this.score;
     }
 
-    collidePlayerEnemy(player: Phaser.Physics.Arcade.Sprite, enemy: Enemy1) { 
+    collideLaserAsteroid(laser: Bullet, asteroid: Asteroid) { 
+        if (!laser.active) return;
+        if (!asteroid.active) return;
+
+        laser.setActive(false).setVisible(false);
+        asteroid.setActive(false).setVisible(false);
+        
+    }
+
+    collidePlayerEnemy(player: Phaser.Physics.Arcade.Sprite, enemy: Enemy) { 
         if (!player.active) return;
         if (!enemy.active) return;
 
         player.setActive(false).setVisible(false);
         enemy.setActive(false).setVisible(false);
+
+        this.time.delayedCall(500, this.gameOver, [], this);
+    }
+
+    collidePlayerAsteroid(player: Phaser.Physics.Arcade.Sprite, asteroid: Asteroid) { 
+        if (!player.active) return;
+        if (!asteroid.active) return;
+
+        player.setActive(false).setVisible(false);
+        asteroid.setActive(false).setVisible(false);
 
         this.time.delayedCall(500, this.gameOver, [], this);
     }
