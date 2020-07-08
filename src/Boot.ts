@@ -19,6 +19,19 @@
           this.load.image("enemy1", "enemies/enemyBlack1.png");
           this.load.image("enemy2", "enemies/enemyRed4.png");
           this.load.image("enemy3", "ufoRed.png");
+
+          // asteroids
+          this.load.image("asteroidBig1", "meteors/meteorGray_big1");
+          this.load.image("asteroidBig2", "meteors/meteorGray_big2");
+          this.load.image("asteroidBig3", "meteors/meteorGray_big3");
+          this.load.image("asteroidBig4", "meteors/meteorGray_big4");
+
+          this.load.image("asteroidMedium1", "meteors/meteorGray_med1");
+          this.load.image("asteroidMedium2", "meteors/meteorGray_med2");
+          
+          this.load.image("asteroidSmall1", "meteors/meteorGray_small1");
+          this.load.image("asteroidSmall2", "meteors/meteorGray_small2");
+          
       }
 
       create() {
