@@ -35,6 +35,7 @@ export class Play extends Phaser.Scene {
     score: number = 0;
 
     scoreText: Phaser.GameObjects.Text;
+    debugText: Phaser.GameObjects.Text;
 
     constructor() {
         super("Play");
@@ -157,6 +158,9 @@ export class Play extends Phaser.Scene {
 
         // SCORE TEXT
         this.scoreText = this.add.text(5, 5, "Score: 0", { fontFamily: "Arial Black", fontSize: 12, color: "#33ff33", align: 'left' }).setStroke('#333333', 1);
+
+        // DEBUG TEXT
+        this.debugText = this.add.text(5, 30, "Debug", { fontFamily: "Arial Black", fontSize: 12, color: "#33ff33", align: 'left' }).setStroke('#333333', 1);
     }
 
     update(time: number, delta: number) {
@@ -209,6 +213,8 @@ export class Play extends Phaser.Scene {
             
             this.lastAsteroidSpawn += 5000;
         }
+
+        this.debugText.text = "Debug";
     }
 
     constrainVelocity(sprite: Phaser.Physics.Arcade.Sprite, maxVelocity: number)
@@ -252,17 +258,21 @@ export class Play extends Phaser.Scene {
         // split big asteroids
         if (asteroid instanceof AsteroidBig){
             let left : AsteroidMedium = this.asteroidsMedium.get() as AsteroidMedium;
-            let right : AsteroidMedium = this.asteroidsMedium.get() as AsteroidMedium;
-            if (left && right) { 
+            if (left) { 
                 left.launch(asteroid.x - 30, asteroid.y);     
+            }
+            let right : AsteroidMedium = this.asteroidsMedium.get() as AsteroidMedium;
+            if (right) { 
                 right.launch(asteroid.x + 30, asteroid.y);
             }
         }
         if (asteroid instanceof AsteroidMedium){
             let left : AsteroidSmall = this.asteroidsSmall.get() as AsteroidSmall;
-            let right : AsteroidSmall = this.asteroidsSmall.get() as AsteroidSmall;
-            if (left && right) { 
+            if (left) { 
                 left.launch(asteroid.x - 15, asteroid.y);     
+            }
+            let right : AsteroidSmall = this.asteroidsSmall.get() as AsteroidSmall;
+            if (right) { 
                 right.launch(asteroid.x + 15, asteroid.y);
             }
         }
