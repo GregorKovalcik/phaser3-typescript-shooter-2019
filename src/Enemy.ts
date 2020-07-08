@@ -2,22 +2,26 @@
     // and providing simple movement in update(...) method
     export class Enemy extends Phaser.Physics.Arcade.Sprite {
   
-        speed: number;
+        public speed: number;
+        public spriteTexture: string;
+        public spriteScaleX: number = 0.3;
+        public spriteScaleY: number = 0.3;
 
-        constructor( scene: Phaser.Scene ) {
-            super(scene, 0, 0, "enemy");
-            this.speed = Phaser.Math.GetSpeed(50, 1);
+        constructor( scene: Phaser.Scene, texture: string = "enemy1", speed: number = Phaser.Math.GetSpeed(50, 1) ) {
+            super(scene, 0, 0, texture);
+            this.spriteTexture = texture;
+            this.speed = speed;
         }
-  
+
         launch(x: number, y: number) : Enemy {
-            Phaser.Physics.Arcade.Sprite.call(this, this.scene, 0, 0, 'enemy');
+            Phaser.Physics.Arcade.Sprite.call(this, this.scene, 0, 0, this.spriteTexture);
             
-            this.setScale(0.3, 0.3);
+            this.setScale(this.spriteScaleX, this.spriteScaleY);
             
 
             this.scene.physics.add.existing(this);
-            this.body.height *= 0.3;
-            this.body.width *= 0.3;
+            this.body.height *= this.spriteScaleY;
+            this.body.width *= this.spriteScaleX;
 
             this.setPosition(x, y);
 

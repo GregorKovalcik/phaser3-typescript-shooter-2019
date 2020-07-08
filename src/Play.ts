@@ -1,5 +1,8 @@
 import { Bullet } from "./Bullet";
 import { Enemy } from "./Enemy";
+import { Enemy1 } from "./Enemy1";
+import { Enemy2 } from "./Enemy2";
+import { Enemy3 } from "./Enemy3";
     
 export class Play extends Phaser.Scene {
 
@@ -12,7 +15,9 @@ export class Play extends Phaser.Scene {
     lasers: Phaser.Physics.Arcade.Group;
 
     // this will act as a pool for Enemy(ies) as well as "Unity collision layer"
-    enemies: Phaser.Physics.Arcade.Group;
+    enemies1: Phaser.Physics.Arcade.Group;
+    enemies2: Phaser.Physics.Arcade.Group;
+    enemies3: Phaser.Physics.Arcade.Group;
 
     lastSpawn: number = 0;
 
@@ -84,17 +89,31 @@ export class Play extends Phaser.Scene {
         });            
 
         // ENEMY GROUP
-        this.enemies = this.physics.add.group({
-            classType: Enemy,
-            maxSize: 50,
+        this.enemies1 = this.physics.add.group({
+            classType: Enemy1,
+            maxSize: 10,
             runChildUpdate: true
         });
-        
+        this.enemies2 = this.physics.add.group({
+            classType: Enemy2,
+            maxSize: 10,
+            runChildUpdate: true
+        });
+        this.enemies3 = this.physics.add.group({
+            classType: Enemy3,
+            maxSize: 10,
+            runChildUpdate: true
+        });
+
         // LASERS kill ENEMIES
-        this.physics.add.collider(this.lasers, this.enemies, this.collideLaserEnemy, null, this); // last parameter is the context passed into the callback
+        this.physics.add.collider(this.lasers, this.enemies1, this.collideLaserEnemy, null, this); // last parameter is the context passed into the callback
+        this.physics.add.collider(this.lasers, this.enemies2, this.collideLaserEnemy, null, this);
+        this.physics.add.collider(this.lasers, this.enemies3, this.collideLaserEnemy, null, this);
 
         // PLAYER is killed by ENEMIES
-        this.physics.add.collider(this.player, this.enemies, this.collidePlayerEnemy, null, this); // last parameter is the context passed into the callback
+        this.physics.add.collider(this.player, this.enemies1, this.collidePlayerEnemy, null, this); // last parameter is the context passed into the callback
+        this.physics.add.collider(this.player, this.enemies2, this.collidePlayerEnemy, null, this);
+        this.physics.add.collider(this.player, this.enemies3, this.collidePlayerEnemy, null, this);
 
         // SCORE TEXT
         this.scoreText = this.add.text(5, 5, "Score: 0", { fontFamily: "Arial Black", fontSize: 12, color: "#33ff33", align: 'left' }).setStroke('#333333', 1);
@@ -115,7 +134,23 @@ export class Play extends Phaser.Scene {
 
         if (this.lastSpawn < 0) {
             // SPAWN ENEMY
-            let e : Enemy = this.enemies.get() as Enemy;
+            var enemyGroup = this.enemies1;
+            var nEnemyTypes = 3;
+            switch(Math.floor(Math.random() * Math.floor(nEnemyTypes)))
+            {
+                case 0: 
+                    enemyGroup = this.enemies1;
+                    break;
+                case 1: 
+                    enemyGroup = this.enemies2;
+                    break;
+                case 2: 
+                    enemyGroup = this.enemies3;
+                    break;
+            }
+            let e : Enemy = enemyGroup.get() as Enemy;
+            
+            
             if (e) { 
               e.launch(Phaser.Math.Between(50, 400), -50);     
             }
@@ -143,7 +178,7 @@ export class Play extends Phaser.Scene {
         }
     }
 
-    collideLaserEnemy(laser: Bullet, enemy: Enemy) { 
+    collideLaserEnemy(laser: Bullet, enemy: Enemy1) { 
         if (!laser.active) return;
         if (!enemy.active) return;
 
@@ -154,7 +189,7 @@ export class Play extends Phaser.Scene {
         this.scoreText.text = "Score: " + this.score;
     }
 
-    collidePlayerEnemy(player: Phaser.Physics.Arcade.Sprite, enemy: Enemy) { 
+    collidePlayerEnemy(player: Phaser.Physics.Arcade.Sprite, enemy: Enemy1) { 
         if (!player.active) return;
         if (!enemy.active) return;
 
