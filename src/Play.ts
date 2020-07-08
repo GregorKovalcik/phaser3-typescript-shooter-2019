@@ -2,7 +2,7 @@ import { Bullet } from "./Bullet";
 import { Enemy } from "./Enemy";
 import { Enemy1 } from "./Enemy1";
 import { Enemy2 } from "./Enemy2";
-import { Enemy3 } from "./EnemiesEnemy3";
+import { Enemy3 } from "./Enemy3";
 
 export class Play extends Phaser.Scene {
 
