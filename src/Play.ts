@@ -48,6 +48,7 @@ export class Play extends Phaser.Scene {
     explosionParticles: Phaser.GameObjects.Particles.ParticleEmitterManager;
     explosionEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
 
+    startTime: number;
     lastEnemySpawn: number = 0;
     lastAsteroidSpawn: number = 0;
     lastPowerupSpawn: number = 0;
@@ -238,6 +239,8 @@ export class Play extends Phaser.Scene {
             lifespan: 600,
             gravityY: 0
         });
+
+        this.startTime = this.time.now;
     }
 
     update(time: number, delta: number) {
@@ -300,7 +303,7 @@ export class Play extends Phaser.Scene {
             }
 
             // enemy level 2 (after 1 minute)
-            if (time > 60000){
+            if (time - this.startTime > 60000){
                 let e : Enemy = this.enemies2.get() as Enemy;
                 if (e) { 
                     e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60), Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1));     
@@ -308,7 +311,7 @@ export class Play extends Phaser.Scene {
             }
 
             // enemy level 3 (after 2 minutes)
-            if (time > 120000){
+            if (time - this.startTime > 120000){
                 let e : Enemy = this.enemies3.get() as Enemy;
                 if (e) { 
                     e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60), Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1));     
@@ -321,12 +324,12 @@ export class Play extends Phaser.Scene {
         // SPAWN ASTEROID    
         this.lastAsteroidSpawn -= delta;
 
-        if (this.lastAsteroidSpawn < 0) {
+        if (this.lastAsteroidSpawn < 0 ) {
             
             let asteroid : Asteroid = this.asteroidsBig.get() as Asteroid;
             if (asteroid) { 
                asteroid.launch(Phaser.Math.Between(50, 400), -50, 0, Phaser.Math.GetSpeed(Phaser.Math.Between(15, 25), 1));  
-               asteroid.health = Math.ceil(time / 60000);   
+               asteroid.health = Math.ceil((time - this.startTime) / 60000);   
             }
             
             this.lastAsteroidSpawn += 5000;
@@ -496,10 +499,13 @@ export class Play extends Phaser.Scene {
 
     gameOver() {
         this.scene.restart();
+        
+        this.score = 0;
         this.lives = 3;
         this.isFrontFireModeEnabled = false;
         this.isSideFireModeEnabled = false;
         this.isRearFireModeEnabled = false;
+        this.startTime = this.time.now;
     }
 
 }
