@@ -410,8 +410,19 @@ export class Play extends Phaser.Scene {
             this.scoreText.text = "Score: " + this.score;
         }
         else if (powerup instanceof PowerUpFirepower){
-            // TODO
-            
+            if (!this.isFrontFireModeEnabled){
+                this.isFrontFireModeEnabled = true;
+            } 
+            else if (!this.isSideFireModeEnabled){
+                this.isSideFireModeEnabled = true;
+            } 
+            else if (!this.isRearFireModeEnabled) {
+                this.isRearFireModeEnabled = true
+            }
+            else {
+                this.score += 10;
+                this.scoreText.text = "Score: " + this.score;
+            }
         }
         else if (powerup instanceof PowerUpDefense){
             // TODO
