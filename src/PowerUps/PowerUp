@@ -4,8 +4,9 @@
   
         public speed: number;
         public spriteTexture: string;
-        public spriteScale: number = 0.3;
-        
+        public spriteScaleX: number = 0.3;
+        public spriteScaleY: number = 0.3;
+
         constructor( scene: Phaser.Scene, texture: string = "enemy1", speed: number = Phaser.Math.GetSpeed(50, 1) ) {
             super(scene, 0, 0, texture);
             this.spriteTexture = texture;
@@ -15,11 +16,12 @@
         launch(x: number, y: number) : Enemy {
             Phaser.Physics.Arcade.Sprite.call(this, this.scene, 0, 0, this.spriteTexture);
             
-            this.setScale(this.spriteScale, this.spriteScale);
+            this.setScale(this.spriteScaleX, this.spriteScaleY);
             
 
             this.scene.physics.add.existing(this);
-            this.body.setSize(this.spriteScale, this.spriteScale);
+            this.body.height *= this.spriteScaleY;
+            this.body.width *= this.spriteScaleX;
 
             this.setPosition(x, y);
 
@@ -40,4 +42,4 @@
         }
   
     }
-
+    

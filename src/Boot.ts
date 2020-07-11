@@ -32,6 +32,10 @@
           this.load.image("asteroidSmall1", "meteors/meteorGrey_small1.png");
           this.load.image("asteroidSmall2", "meteors/meteorGrey_small2.png");
           
+          // power-ups
+          this.load.image("powerupScore", "powerups/powerupBlue_star.png");
+          this.load.image("powerupFirepower", "powerups/powerupBlue_bolt.png");
+          this.load.image("powerupDefense", "powerups/powerupBlue_shield.png");
       }
 
       create() {

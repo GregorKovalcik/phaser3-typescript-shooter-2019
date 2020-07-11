@@ -7,6 +7,10 @@ import { Asteroid } from "./Asteroids/Asteroid";
 import { AsteroidBig } from "./Asteroids/AsteroidBig";
 import { AsteroidMedium } from "./Asteroids/AsteroidMedium";
 import { AsteroidSmall } from "./Asteroids/AsteroidSmall";
+import { PowerUp } from "./PowerUps/PowerUp";
+import { PowerUpScore } from "./PowerUps/PowerUpScore";
+import { PowerUpFirepower } from "./PowerUps/PowerUpFirepower";
+import { PowerUpDefense } from "./PowerUps/PowerUpDefense";
 
 export class Play extends Phaser.Scene {
 
@@ -18,6 +22,10 @@ export class Play extends Phaser.Scene {
     // this will act as a pool for Bullet(s) as well as "Unity collision layer"
     lasers: Phaser.Physics.Arcade.Group;
 
+    isFrontFireModeEnabled: boolean = false;
+    isSideFireModeEnabled: boolean = false;
+    isRearFireModeEnabled: boolean = false;
+
     // this will act as a pool for Enemy(ies) as well as "Unity collision layer"
     enemies1: Phaser.Physics.Arcade.Group;
     enemies2: Phaser.Physics.Arcade.Group;
@@ -28,9 +36,15 @@ export class Play extends Phaser.Scene {
     asteroidsMedium: Phaser.Physics.Arcade.Group;
     asteroidsSmall: Phaser.Physics.Arcade.Group;
 
+    // this will act as a pool for PowerUp(s) as well as "Unity collision layer"
+    powerupsScore: Phaser.Physics.Arcade.Group;
+    powerupsFirepower: Phaser.Physics.Arcade.Group;
+    powerupsDefense: Phaser.Physics.Arcade.Group;
+    
 
     lastEnemySpawn: number = 0;
     lastAsteroidSpawn: number = 0;
+    lastPowerupSpawn: number = 0;
 
     score: number = 0;
 
@@ -46,8 +60,9 @@ export class Play extends Phaser.Scene {
 
         this.player = this.physics.add.sprite(320, 500, "playership1").setScale(0.5, 0.5);
         this.player.body.collideWorldBounds=true;
-        this.player.body.width *= 0.5;
-        this.player.body.height *= 0.5;
+        this.player.body.setSize(this.player.body.width * 0.5, this.player.body.height * 0.5);
+        // this.player.body.width *= 0.5;
+        // this.player.body.height *= 0.5;
 
         this.moveKeys = <{[key:string] : Phaser.Input.Keyboard.Key }> this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
@@ -134,6 +149,24 @@ export class Play extends Phaser.Scene {
             runChildUpdate: true
         });
 
+        // POWERUP GROUP
+        this.powerupsScore = this.physics.add.group({
+            classType: PowerUpScore,
+            maxSize: 3,
+            runChildUpdate: true
+        });
+        this.powerupsFirepower = this.physics.add.group({
+            classType: PowerUpFirepower,
+            maxSize: 3,
+            runChildUpdate: true
+        });
+        this.powerupsDefense = this.physics.add.group({
+            classType: PowerUpDefense,
+            maxSize: 3,
+            runChildUpdate: true
+        });
+        
+
         // LASERS kill ENEMIES
         this.physics.add.collider(this.lasers, this.enemies1, this.collideLaserEnemy, null, this); // last parameter is the context passed into the callback
         this.physics.add.collider(this.lasers, this.enemies2, this.collideLaserEnemy, null, this);
@@ -155,6 +188,11 @@ export class Play extends Phaser.Scene {
         this.physics.add.collider(this.player, this.asteroidsMedium, this.collidePlayerAsteroid, null, this);
         this.physics.add.collider(this.player, this.asteroidsSmall, this.collidePlayerAsteroid, null, this);
 
+        // PLAYER collects POWERUPS
+        this.physics.add.collider(this.player, this.powerupsScore, this.collidePlayerPowerUp, null, this);
+        this.physics.add.collider(this.player, this.powerupsFirepower, this.collidePlayerPowerUp, null, this);
+        this.physics.add.collider(this.player, this.powerupsDefense, this.collidePlayerPowerUp, null, this);
+        
 
         // SCORE TEXT
         this.scoreText = this.add.text(5, 5, "Score: 0", { fontFamily: "Arial Black", fontSize: 12, color: "#33ff33", align: 'left' }).setStroke('#333333', 1);
@@ -175,7 +213,7 @@ export class Play extends Phaser.Scene {
             } 
 
             // stacked front
-            if (true){
+            if (this.isFrontFireModeEnabled){
                 let bulletLeft: Bullet = this.lasers.get() as Bullet;
                 if (bulletLeft) {
                     bulletLeft.fireFrontLeft(this.player.x, this.player.y);
@@ -187,7 +225,7 @@ export class Play extends Phaser.Scene {
             }
 
             // stacked rear
-            if (true){
+            if (this.isRearFireModeEnabled){
                 let bulletLeft: Bullet = this.lasers.get() as Bullet;
                 if (bulletLeft) {
                     bulletLeft.fireRearLeft(this.player.x, this.player.y);
@@ -199,7 +237,7 @@ export class Play extends Phaser.Scene {
             }
 
             // stacked side
-            if (true){
+            if (this.isSideFireModeEnabled){
                 let bulletLeft: Bullet = this.lasers.get() as Bullet;
                 if (bulletLeft) {
                     bulletLeft.fireSideLeft(this.player.x, this.player.y);
@@ -251,7 +289,32 @@ export class Play extends Phaser.Scene {
             this.lastAsteroidSpawn += 5000;
         }
 
-        this.debugText.text = "Debug";
+        // SPAWN POWERUP    
+        this.lastPowerupSpawn -= delta;
+
+        if (this.lastPowerupSpawn < 0) {
+            var powerupGroup = this.powerupsScore;
+            var nPowerupTypes = 3;
+            switch(Math.floor(Math.random() * nEnemyTypes))
+            {
+                case 0: 
+                    powerupGroup = this.powerupsScore;
+                    break;
+                case 1: 
+                    powerupGroup = this.powerupsFirepower;
+                    break;
+                case 2: 
+                    powerupGroup = this.powerupsDefense;
+                    break;
+            }
+
+            let powerup : PowerUp = powerupGroup.get() as PowerUp;
+            if (powerup) { 
+              powerup.launch(Phaser.Math.Between(50, 400), -50);     
+            }
+            
+            this.lastPowerupSpawn += 10000;
+        }
     }
 
     constrainVelocity(sprite: Phaser.Physics.Arcade.Sprite, maxVelocity: number)
@@ -334,6 +397,25 @@ export class Play extends Phaser.Scene {
         asteroid.setActive(false).setVisible(false);
 
         this.time.delayedCall(500, this.gameOver, [], this);
+    }
+
+    collidePlayerPowerUp(player: Phaser.Physics.Arcade.Sprite, powerup: PowerUp) { 
+        if (!player.active) return;
+        if (!powerup.active) return;
+
+        powerup.setActive(false).setVisible(false);
+
+        if (powerup instanceof PowerUpScore){
+            this.score += 100;
+            this.scoreText.text = "Score: " + this.score;
+        }
+        else if (powerup instanceof PowerUpFirepower){
+            // TODO
+            
+        }
+        else if (powerup instanceof PowerUpDefense){
+            // TODO
+        }
     }
 
     gameOver() {
