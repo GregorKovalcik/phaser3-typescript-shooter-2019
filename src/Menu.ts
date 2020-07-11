@@ -13,7 +13,8 @@
           // setup background
           this.stars = this.add.group({
               classType: Star,
-              maxSize: 100,
+              // consistent star density across various display resolutions
+              maxSize: Math.floor(1.0 * (Number(this.game.config.width) * Number(this.game.config.height)) / (480*640) * 100),
               runChildUpdate: true
           });
           for (let i = 0; i < this.stars.maxSize; i++) {
@@ -26,17 +27,22 @@
           }
 
           // draw menu
-          this.add.text(110, 100, ["Classic", "Sh00ter"], { 
+          this.add.text(
+              Number(this.game.config.width) / 2 - 180, 
+              100, 
+              ["Classic", "Sh00ter"], { 
               fontFamily: 'Arial', 
               color: '#36bbf5',
-              fontSize: 72,
+              fontSize: 100,
               align: "center"
           });
 
-          this.add.text(120, Number(this.game.config.height) - 100, "Press any key to start.", { 
+          this.add.text(
+            Number(this.game.config.width) / 2 - 180,
+            Number(this.game.config.height) - 100, "Press any key to start.", { 
               fontFamily: 'Arial', 
               color: '#36bbf5',
-              fontSize: 24,
+              fontSize: 36,
               align: "center"
           });
 

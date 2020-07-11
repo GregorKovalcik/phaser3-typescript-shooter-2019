@@ -15,6 +15,9 @@ import { Star } from "./Environment/Star";
 
 export class Play extends Phaser.Scene {
 
+    displayWidth: number;
+    displayHeight: number;
+
     player: Phaser.Physics.Arcade.Sprite;
 
     // here we will store the action mapping "action name" => keycode 
@@ -69,7 +72,13 @@ export class Play extends Phaser.Scene {
     create() {
         console.log("Play.create()");
 
-        this.player = this.physics.add.sprite(320, 500, "playership1").setScale(0.5, 0.5);
+        this.displayWidth = Number(this.game.config.width);
+        this.displayHeight = Number(this.game.config.height);
+
+        this.player = this.physics.add.sprite(
+            Number(this.game.config.width) / 2, 
+            Number(this.game.config.height) - 50, 
+            "playership1").setScale(0.5, 0.5);
         this.player.setCollideWorldBounds(true);
         this.player.body.setSize(this.player.body.width * 0.5, this.player.body.height * 0.5);
         this.player.setDepth(100);
@@ -176,10 +185,11 @@ export class Play extends Phaser.Scene {
             runChildUpdate: true
         });
         
-        // STARS GROUP
+        // STARS GROUP 
         this.stars = this.add.group({
             classType: Star,
-            maxSize: 100,
+            // consistent star density across various display resolutions
+            maxSize: Math.floor(1.0 * (Number(this.game.config.width) * Number(this.game.config.height)) / (480*640) * 100), 
             runChildUpdate: true
         });
 
@@ -211,11 +221,11 @@ export class Play extends Phaser.Scene {
         
 
         // SCORE TEXT
-        this.scoreText = this.add.text(5, 5, "Score: 0", { fontFamily: "Arial Black", fontSize: 12, color: "#33ff33", align: 'left' }).setStroke('#333333', 1);
+        this.scoreText = this.add.text(5, 5, "Score: 0", { fontFamily: "Arial Black", fontSize: 24, color: "#36bbf5", align: 'left' });
         this.scoreText.setDepth(1000);
 
         // LIVES TEXT
-        this.livesText = this.add.text(5, 30, "Lives: 3", { fontFamily: "Arial Black", fontSize: 12, color: "#33ff33", align: 'left' }).setStroke('#333333', 1);
+        this.livesText = this.add.text(5, 30, "Lives: 3", { fontFamily: "Arial Black", fontSize: 24, color: "#36bbf5", align: 'left' });
         this.livesText.setDepth(1000);
 
         // SPAWN STARS
@@ -302,7 +312,11 @@ export class Play extends Phaser.Scene {
         if (this.lastEnemyLevel1Spawn < 0) {  
             let e : Enemy = this.enemies1.get() as Enemy;
             if (e) { 
-                e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60), Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1), gameDifficulty / 2);     
+                e.launch(
+                    Phaser.Math.Between(50, this.displayWidth - 50), 
+                    Phaser.Math.Between(-40, -60), 
+                    Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1), 
+                    gameDifficulty / 2);     
             }
             this.lastEnemyLevel1Spawn += 1000;
         }
@@ -312,7 +326,11 @@ export class Play extends Phaser.Scene {
         if (this.lastEnemyLevel2Spawn < 0) {
             let e : Enemy = this.enemies2.get() as Enemy;
             if (e) { 
-                e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60), Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1), gameDifficulty / 2);     
+                e.launch(
+                    Phaser.Math.Between(50, this.displayWidth - 50), 
+                    Phaser.Math.Between(-40, -60), 
+                    Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1), 
+                    gameDifficulty / 2);     
             }
             this.lastEnemyLevel2Spawn += 3000;
         }
@@ -322,7 +340,11 @@ export class Play extends Phaser.Scene {
         if (this.lastEnemyLevel3Spawn < 0) {
             let e : Enemy = this.enemies3.get() as Enemy;
             if (e) { 
-                e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60), Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1), gameDifficulty / 2);     
+                e.launch(
+                    Phaser.Math.Between(50, this.displayWidth - 50), 
+                    Phaser.Math.Between(-40, -60), 
+                    Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1), 
+                    gameDifficulty / 2);     
             }
             this.lastEnemyLevel3Spawn += 3000;
         }
@@ -335,7 +357,11 @@ export class Play extends Phaser.Scene {
             
             let asteroid : Asteroid = this.asteroidsBig.get() as Asteroid;
             if (asteroid) { 
-               asteroid.launch(Phaser.Math.Between(50, 400), -50, 0, Phaser.Math.GetSpeed(Phaser.Math.Between(15, 25), 1));  
+               asteroid.launch(
+                  Phaser.Math.Between(50, this.displayWidth - 50), 
+                  -50, 
+                  0, 
+                  Phaser.Math.GetSpeed(Phaser.Math.Between(15, 25), 1));  
                asteroid.health = gameDifficulty * 2;   
             }
             
@@ -363,7 +389,7 @@ export class Play extends Phaser.Scene {
 
             let powerup : PowerUp = powerupGroup.get() as PowerUp;
             if (powerup) { 
-                powerup.launch(Phaser.Math.Between(50, 400), -50);     
+                powerup.launch(Phaser.Math.Between(50, this.displayWidth - 50), -50);     
             }
             
             this.lastPowerupSpawn += 30000;
