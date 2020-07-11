@@ -168,10 +168,17 @@ export class Play extends Phaser.Scene {
 
         if (this.input.keyboard.checkDown(this.moveKeys['fire'], 300))
         {
+            // default fire mode
             let b: Bullet = this.lasers.get() as Bullet;
             if (b) {
                 b.fire(this.player.x, this.player.y);                
             } 
+
+            // stacked front
+
+            // stacked rear
+
+            // stacked side
         }
 
         // SPAWN ENEMY    
