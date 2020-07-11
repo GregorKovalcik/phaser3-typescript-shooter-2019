@@ -14,16 +14,18 @@
             this.setDepth(100);
         }
 
-        launch(x: number, y: number) : Enemy {
+        launch(x: number, y: number, speed?:number) : Enemy {
             Phaser.Physics.Arcade.Sprite.call(this, this.scene, 0, 0, this.spriteTexture);
             
             this.setScale(this.spriteScale, this.spriteScale);
             
-
             this.scene.physics.add.existing(this);
             this.body.setSize(this.spriteScale, this.spriteScale);
 
             this.setPosition(x, y);
+            if (speed){
+                this.speed = speed;
+            }
 
             this.setActive(true);
             this.setVisible(true);

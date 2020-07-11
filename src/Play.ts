@@ -296,14 +296,14 @@ export class Play extends Phaser.Scene {
             // enemy level 1 (default)
             let e : Enemy = this.enemies1.get() as Enemy;
             if (e) { 
-                e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60));     
+                e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60), Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1));     
             }
 
             // enemy level 2 (after 1 minute)
             if (time > 60000){
                 let e : Enemy = this.enemies2.get() as Enemy;
                 if (e) { 
-                    e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60));     
+                    e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60), Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1));     
                 }
             }
 
@@ -311,7 +311,7 @@ export class Play extends Phaser.Scene {
             if (time > 120000){
                 let e : Enemy = this.enemies3.get() as Enemy;
                 if (e) { 
-                    e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60));     
+                    e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60), Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1));     
                 }
             }
 
@@ -325,8 +325,8 @@ export class Play extends Phaser.Scene {
             
             let asteroid : Asteroid = this.asteroidsBig.get() as Asteroid;
             if (asteroid) { 
-               asteroid.launch(Phaser.Math.Between(50, 400), -50);  
-               asteroid.health = Math.ceil(time / 0000);   
+               asteroid.launch(Phaser.Math.Between(50, 400), -50, 0, Phaser.Math.GetSpeed(Phaser.Math.Between(15, 25), 1));  
+               asteroid.health = Math.ceil(time / 60000);   
             }
             
             this.lastAsteroidSpawn += 5000;
@@ -407,25 +407,28 @@ export class Play extends Phaser.Scene {
         asteroid.setActive(false).setVisible(false);
 
         // split big asteroids
-        let splitSpeed = 20;
         if (asteroid instanceof AsteroidBig){
             let left : Asteroid = this.asteroidsMedium.get() as Asteroid;
             if (left) { 
-                left.launch(asteroid.x - 30, asteroid.y, -Phaser.Math.GetSpeed(splitSpeed, 1)); 
+                left.launch(asteroid.x - 30, asteroid.y, -Phaser.Math.GetSpeed(Phaser.Math.Between(5, 40), 1)); 
+                left.speed = Phaser.Math.GetSpeed(Phaser.Math.Between(20, 50), 1);
             }
             let right : Asteroid = this.asteroidsMedium.get() as Asteroid;
             if (right) { 
-                right.launch(asteroid.x + 30, asteroid.y, Phaser.Math.GetSpeed(splitSpeed, 1));
+                right.launch(asteroid.x + 30, asteroid.y, Phaser.Math.GetSpeed(Phaser.Math.Between(5, 40), 1));
+                right.speed = Phaser.Math.GetSpeed(Phaser.Math.Between(20, 50), 1);
             }
         }
         if (asteroid instanceof AsteroidMedium){
             let left : Asteroid = this.asteroidsSmall.get() as Asteroid;
             if (left) { 
-                left.launch(asteroid.x - 15, asteroid.y, -Phaser.Math.GetSpeed(splitSpeed, 1));
+                left.launch(asteroid.x - 15, asteroid.y, -Phaser.Math.GetSpeed(Phaser.Math.Between(5, 40), 1));
+                left.speed = Phaser.Math.GetSpeed(Phaser.Math.Between(40, 70), 1);
             }
             let right : Asteroid = this.asteroidsSmall.get() as Asteroid;
             if (right) { 
-                right.launch(asteroid.x + 15, asteroid.y, Phaser.Math.GetSpeed(splitSpeed, 1));
+                right.launch(asteroid.x + 15, asteroid.y, Phaser.Math.GetSpeed(Phaser.Math.Between(5, 40), 1));
+                right.speed = Phaser.Math.GetSpeed(Phaser.Math.Between(40, 70), 1);
             }
         }
     }

@@ -21,7 +21,7 @@
             this.setDepth(10);
         }
 
-        launch(x: number, y: number, lateralSpeed: number = 0) : Asteroid {
+        launch(x: number, y: number, lateralSpeed: number = 0, speed?: number) : Asteroid {
             Phaser.Physics.Arcade.Sprite.call(this, this.scene, 0, 0, this.spriteTexture);
             
             this.setScale(this.spriteScale, this.spriteScale);
@@ -32,6 +32,10 @@
 
             this.setPosition(x, y);
             this.lateralSpeed = lateralSpeed;
+
+            if (speed){
+                this.speed = speed;
+            }
 
             this.setActive(true);
             this.setVisible(true);
