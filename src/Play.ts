@@ -325,7 +325,8 @@ export class Play extends Phaser.Scene {
             
             let asteroid : Asteroid = this.asteroidsBig.get() as Asteroid;
             if (asteroid) { 
-               asteroid.launch(Phaser.Math.Between(50, 400), -50);     
+               asteroid.launch(Phaser.Math.Between(50, 400), -50);  
+               asteroid.health = Math.ceil(time / 0000);   
             }
             
             this.lastAsteroidSpawn += 5000;
@@ -398,6 +399,11 @@ export class Play extends Phaser.Scene {
         if (!asteroid.active) return;
 
         laser.setActive(false).setVisible(false);
+
+        if (!asteroid.hit()){
+            return;
+        }
+
         asteroid.setActive(false).setVisible(false);
 
         // split big asteroids

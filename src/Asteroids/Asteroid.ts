@@ -6,6 +6,7 @@
         public lateralSpeed: number = 0;
         public spriteTexture: string = "asteroidBig1";
         public spriteScale: number = 0.6;
+        public health: number = 1;
 
         constructor( scene: Phaser.Scene, texture?: string, spriteScale?: number, speed?: number) {
             super(scene, 0, 0, texture);
@@ -47,6 +48,12 @@
                 this.setActive(false);
                 this.setVisible(false);
             }
+        }
+
+        // return true if destroyed by the hit
+        hit() : boolean {
+            // small asteroids are destroyed by one hit by default
+            return true;
         }
   
     }

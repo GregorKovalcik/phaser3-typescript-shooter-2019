@@ -12,5 +12,10 @@
               Phaser.Math.GetSpeed(20, 1)
               );
         }
-  
+
+        // return true if destroyed by the hit
+        hit() : boolean {
+            this.health -= 1;
+            return this.health <= 0;
+        }
     }
