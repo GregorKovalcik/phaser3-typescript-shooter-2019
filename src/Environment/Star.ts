@@ -21,7 +21,6 @@
             Phaser.GameObjects.Sprite.call(this, this.scene, 0, 0, this.spriteTexture);
             
             this.setScale(this.spriteScale, this.spriteScale);
-
             this.setPosition(x, y);
 
             this.setActive(true);

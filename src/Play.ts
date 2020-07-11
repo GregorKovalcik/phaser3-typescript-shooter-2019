@@ -207,9 +207,11 @@ export class Play extends Phaser.Scene {
 
         // SCORE TEXT
         this.scoreText = this.add.text(5, 5, "Score: 0", { fontFamily: "Arial Black", fontSize: 12, color: "#33ff33", align: 'left' }).setStroke('#333333', 1);
+        this.scoreText.setDepth(1000);
 
-        // DEBUG TEXT
+        // LIVES TEXT
         this.livesText = this.add.text(5, 30, "Lives: 3", { fontFamily: "Arial Black", fontSize: 12, color: "#33ff33", align: 'left' }).setStroke('#333333', 1);
+        this.lText.setDepth(1000);
 
         // SPAWN STARS
         for (let i = 0; i < this.stars.maxSize; i++) {
