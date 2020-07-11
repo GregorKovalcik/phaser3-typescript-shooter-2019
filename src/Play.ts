@@ -49,7 +49,9 @@ export class Play extends Phaser.Scene {
     explosionEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
 
     startTime: number;
-    lastEnemySpawn: number = 0;
+    lastEnemyLevel1Spawn: number = 0;
+    lastEnemyLevel2Spawn: number = 60000;
+    lastEnemyLevel3Spawn: number = 120000;
     lastAsteroidSpawn: number = 10000;
     lastPowerupSpawn: number = 30000;
     lastStarSpawn: number = 0;
@@ -291,35 +293,40 @@ export class Play extends Phaser.Scene {
             }
         }
 
+        let gameDifficulty = Math.ceil((time - this.startTime) / 60000);
+
         // SPAWN ENEMY    
-        this.lastEnemySpawn -= delta;
-
-        if (this.lastEnemySpawn < 0) {
-
-            // enemy level 1 (default)
+        
+        // enemy level 1 (default)
+        this.lastEnemyLevel1Spawn -= delta;
+        if (this.lastEnemyLevel1Spawn < 0) {
             let e : Enemy = this.enemies1.get() as Enemy;
             if (e) { 
-                e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60), Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1));     
+                e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60), Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1), gameDifficulty / 2);     
             }
-
-            // enemy level 2 (after 1 minute)
-            if (time - this.startTime > 60000){
-                let e : Enemy = this.enemies2.get() as Enemy;
-                if (e) { 
-                    e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60), Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1));     
-                }
-            }
-
-            // enemy level 3 (after 2 minutes)
-            if (time - this.startTime > 120000){
-                let e : Enemy = this.enemies3.get() as Enemy;
-                if (e) { 
-                    e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60), Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1));     
-                }
-            }
-
-            this.lastEnemySpawn += 1000;
+            this.lastEnemyLevel1Spawn += 1000;
         }
+
+        // enemy level 2 (after 1 minute)
+        this.lastEnemyLevel2Spawn -= delta;
+        if (this.lastEnemyLevel2Spawn < 0) {
+            let e : Enemy = this.enemies2.get() as Enemy;
+            if (e) { 
+                e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60), Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1), gameDifficulty / 2);     
+            }
+            this.lastEnemyLevel2Spawn += 5000;
+        }
+
+        // enemy level 3 (after 2 minutes)
+        this.lastEnemyLevel3Spawn -= delta;
+        if (this.lastEnemyLevel3Spawn < 0) {
+            let e : Enemy = this.enemies3.get() as Enemy;
+            if (e) { 
+                e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60), Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1), gameDifficulty / 2);     
+            }
+            this.lastEnemyLevel3Spawn += 5000;
+        }
+
 
         // SPAWN ASTEROID    
         this.lastAsteroidSpawn -= delta;
@@ -329,7 +336,7 @@ export class Play extends Phaser.Scene {
             let asteroid : Asteroid = this.asteroidsBig.get() as Asteroid;
             if (asteroid) { 
                asteroid.launch(Phaser.Math.Between(50, 400), -50, 0, Phaser.Math.GetSpeed(Phaser.Math.Between(15, 25), 1));  
-               asteroid.health = Math.ceil((time - this.startTime) / 60000);   
+               asteroid.health = gameDifficulty * 2;   
             }
             
             this.lastAsteroidSpawn += 5000;
@@ -389,6 +396,11 @@ export class Play extends Phaser.Scene {
         if (!enemy.active) return;
 
         laser.setActive(false).setVisible(false);
+        
+        if (!enemy.hit()){
+            return;
+        }
+
         enemy.setActive(false).setVisible(false);
 
         this.score += 1;
@@ -506,6 +518,9 @@ export class Play extends Phaser.Scene {
         this.isSideFireModeEnabled = false;
         this.isRearFireModeEnabled = false;
         this.startTime = this.time.now;
+        this.lastEnemyLevel1Spawn = 0;
+        this.lastEnemyLevel2Spawn = 0;
+        this.lastEnemyLevel3Spawn = 0;
     }
 
 }
