@@ -292,26 +292,29 @@ export class Play extends Phaser.Scene {
         this.lastEnemySpawn -= delta;
 
         if (this.lastEnemySpawn < 0) {
-            var enemyGroup = this.enemies1;
-            var nEnemyTypes = 3;
-            switch(Math.floor(Math.random() * nEnemyTypes))
-            {
-                case 0: 
-                    enemyGroup = this.enemies1;
-                    break;
-                case 1: 
-                    enemyGroup = this.enemies2;
-                    break;
-                case 2: 
-                    enemyGroup = this.enemies3;
-                    break;
+
+            // enemy level 1 (default)
+            let e : Enemy = this.enemies1.get() as Enemy;
+            if (e) { 
+                e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60));     
             }
 
-            let e : Enemy = enemyGroup.get() as Enemy;
-            if (e) { 
-              e.launch(Phaser.Math.Between(50, 400), -50);     
+            // enemy level 2 (after 1 minute)
+            if (time > 60000){
+                let e : Enemy = this.enemies2.get() as Enemy;
+                if (e) { 
+                    e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60));     
+                }
             }
-            
+
+            // enemy level 3 (after 2 minutes)
+            if (time > 120000){
+                let e : Enemy = this.enemies3.get() as Enemy;
+                if (e) { 
+                    e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60));     
+                }
+            }
+
             this.lastEnemySpawn += 1000;
         }
 
@@ -332,9 +335,9 @@ export class Play extends Phaser.Scene {
         this.lastPowerupSpawn -= delta;
 
         if (this.lastPowerupSpawn < 0) {
-            var powerupGroup = this.powerupsScore;
-            var nPowerupTypes = 3;
-            switch(Math.floor(Math.random() * nEnemyTypes))
+            let powerupGroup = this.powerupsScore;
+            let nPowerupTypes = 3;
+            switch(Math.floor(Math.random() * nPowerupTypes))
             {
                 case 0: 
                     powerupGroup = this.powerupsScore;
