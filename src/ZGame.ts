@@ -1,4 +1,5 @@
 import { Boot } from "./Boot";
+import { Menu } from "./Menu";
 import { Play } from "./Play";
 
 // Setting up the Phaser 3; game config is configuring Phaser 3 engine in index.ts
@@ -13,5 +14,5 @@ export var gameConfig = {
                 gravity: { y: 0 }
             }
         },
-        scene: [Boot, Play],        
+        scene: [Boot, Menu, Play],        
     };

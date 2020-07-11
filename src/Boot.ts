@@ -45,8 +45,8 @@
       }
 
       create() {
-        console.log("Boot.create()");
-        this.scene.start("Play");
+          console.log("Boot.create()");
+          this.scene.start("Menu");
       }
 
   }
