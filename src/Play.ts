@@ -96,7 +96,7 @@ export class Play extends Phaser.Scene {
         // BULLET GROUP
         this.lasers = this.physics.add.group({
             classType: Bullet,
-            maxSize: 20,
+            maxSize: 100,
             runChildUpdate: true
         });            
 
@@ -169,16 +169,46 @@ export class Play extends Phaser.Scene {
         if (this.input.keyboard.checkDown(this.moveKeys['fire'], 300))
         {
             // default fire mode
-            let b: Bullet = this.lasers.get() as Bullet;
-            if (b) {
-                b.fire(this.player.x, this.player.y);                
+            let bulletDefault: Bullet = this.lasers.get() as Bullet;
+            if (bulletDefault) {
+                bulletDefault.fireDefault(this.player.x, this.player.y);  
             } 
 
             // stacked front
+            if (true){
+                let bulletLeft: Bullet = this.lasers.get() as Bullet;
+                if (bulletLeft) {
+                    bulletLeft.fireFrontLeft(this.player.x, this.player.y);
+                }
+                let bulletRight: Bullet = this.lasers.get() as Bullet;
+                if (bulletRight) {
+                    bulletRight.fireFrontRight(this.player.x, this.player.y);
+                }
+            }
 
             // stacked rear
+            if (true){
+                let bulletLeft: Bullet = this.lasers.get() as Bullet;
+                if (bulletLeft) {
+                    bulletLeft.fireRearLeft(this.player.x, this.player.y);
+                }
+                let bulletRight: Bullet = this.lasers.get() as Bullet;
+                if (bulletRight) {
+                    bulletRight.fireRearRight(this.player.x, this.player.y);
+                }
+            }
 
             // stacked side
+            if (true){
+                let bulletLeft: Bullet = this.lasers.get() as Bullet;
+                if (bulletLeft) {
+                    bulletLeft.fireSideLeft(this.player.x, this.player.y);
+                }
+                let bulletRight: Bullet = this.lasers.get() as Bullet;
+                if (bulletRight) {
+                    bulletRight.fireSideRight(this.player.x, this.player.y);
+                }
+            }
         }
 
         // SPAWN ENEMY    
@@ -267,25 +297,21 @@ export class Play extends Phaser.Scene {
         if (asteroid instanceof AsteroidBig){
             let left : Asteroid = this.asteroidsMedium.get() as Asteroid;
             if (left) { 
-                left.launch(asteroid.x - 30, asteroid.y); 
-                left.lateralSpeed = -Phaser.Math.GetSpeed(splitSpeed, 1);    
+                left.launch(asteroid.x - 30, asteroid.y, -Phaser.Math.GetSpeed(splitSpeed, 1)); 
             }
             let right : Asteroid = this.asteroidsMedium.get() as Asteroid;
             if (right) { 
-                right.launch(asteroid.x + 30, asteroid.y);
-                right.lateralSpeed = Phaser.Math.GetSpeed(splitSpeed, 1);
+                right.launch(asteroid.x + 30, asteroid.y, Phaser.Math.GetSpeed(splitSpeed, 1));
             }
         }
         if (asteroid instanceof AsteroidMedium){
             let left : Asteroid = this.asteroidsSmall.get() as Asteroid;
             if (left) { 
-                left.launch(asteroid.x - 15, asteroid.y);
-                left.lateralSpeed = -Phaser.Math.GetSpeed(splitSpeed, 1);    
+                left.launch(asteroid.x - 15, asteroid.y, -Phaser.Math.GetSpeed(splitSpeed, 1));
             }
             let right : Asteroid = this.asteroidsSmall.get() as Asteroid;
             if (right) { 
-                right.launch(asteroid.x + 15, asteroid.y);
-                right.lateralSpeed = Phaser.Math.GetSpeed(splitSpeed, 1);
+                right.launch(asteroid.x + 15, asteroid.y, Phaser.Math.GetSpeed(splitSpeed, 1));
             }
         }
     }

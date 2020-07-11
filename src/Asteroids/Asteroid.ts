@@ -18,17 +18,17 @@
                 this.speed = speed;
         }
 
-        launch(x: number, y: number) : Asteroid {
+        launch(x: number, y: number, lateralSpeed: number = 0) : Asteroid {
             Phaser.Physics.Arcade.Sprite.call(this, this.scene, 0, 0, this.spriteTexture);
             
             this.setScale(this.spriteScale, this.spriteScale);
             
 
             this.scene.physics.add.existing(this);
-            this.body.height *= this.spriteScale;
-            this.body.width *= this.spriteScale;
+            this.body.setSize(this.spriteScale, this.spriteScale);
 
             this.setPosition(x, y);
+            this.lateralSpeed = lateralSpeed;
 
             this.setActive(true);
             this.setVisible(true);
