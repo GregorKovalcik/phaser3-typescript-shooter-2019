@@ -45,6 +45,8 @@ export class Play extends Phaser.Scene {
     // we don't need physics for stars
     stars: Phaser.GameObjects.Group;
 
+    explosionParticles: Phaser.GameObjects.Particles.ParticleEmitterManager;
+    explosionEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
 
     lastEnemySpawn: number = 0;
     lastAsteroidSpawn: number = 0;
@@ -211,7 +213,7 @@ export class Play extends Phaser.Scene {
 
         // LIVES TEXT
         this.livesText = this.add.text(5, 30, "Lives: 3", { fontFamily: "Arial Black", fontSize: 12, color: "#33ff33", align: 'left' }).setStroke('#333333', 1);
-        this.lText.setDepth(1000);
+        this.livesText.setDepth(1000);
 
         // SPAWN STARS
         for (let i = 0; i < this.stars.maxSize; i++) {
@@ -222,6 +224,20 @@ export class Play extends Phaser.Scene {
                 star.launch(randomX, randomY);     
             }
         }
+
+        // EXPLOSION EMITTER
+        this.explosionParticles = this.add.particles("explosion");
+        this.explosionParticles.setDepth(101);
+        this.explosionEmitter = this.explosionParticles.createEmitter({
+            frequency: -1,
+            speed: { min: 0, max: 80 },
+            angle: { min: 0, max: 360 },
+            scale: { start: 0.7, end: 0 },
+            tint: 0xff3300,
+            blendMode: 'ADD',
+            lifespan: 600,
+            gravityY: 0
+        });
     }
 
     update(time: number, delta: number) {
@@ -370,6 +386,8 @@ export class Play extends Phaser.Scene {
 
         this.score += 1;
         this.scoreText.text = "Score: " + this.score;
+
+        this.explosionEmitter.explode(10, enemy.x, enemy.y);
     }
 
     collideLaserAsteroid(laser: Bullet, asteroid: Asteroid) { 
@@ -409,6 +427,8 @@ export class Play extends Phaser.Scene {
 
         enemy.setActive(false).setVisible(false);
         this.playerHit();
+
+        this.explosionEmitter.explode(10, enemy.x, enemy.y);
     }
 
     collidePlayerAsteroid(player: Phaser.Physics.Arcade.Sprite, asteroid: Asteroid) { 
@@ -458,11 +478,16 @@ export class Play extends Phaser.Scene {
             this.player.setActive(false).setVisible(false);
             this.time.delayedCall(500, this.gameOver, [], this);
         }
+        
+        this.explosionEmitter.explode(10, this.player.x, this.player.y);
     }
 
     gameOver() {
         this.scene.restart();
         this.lives = 3;
+        this.isFrontFireModeEnabled = false;
+        this.isSideFireModeEnabled = false;
+        this.isRearFireModeEnabled = false;
     }
 
 }

@@ -39,6 +39,9 @@
 
           // environment
           this.load.image("star", "effects/star2.png");
+
+          // effects
+          this.load.image("explosion", "effects/star3.png");
       }
 
       create() {
