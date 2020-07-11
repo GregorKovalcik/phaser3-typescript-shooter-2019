@@ -47,9 +47,10 @@ export class Play extends Phaser.Scene {
     lastPowerupSpawn: number = 0;
 
     score: number = 0;
+    lives: number = 3;
 
     scoreText: Phaser.GameObjects.Text;
-    debugText: Phaser.GameObjects.Text;
+    livesText: Phaser.GameObjects.Text;
 
     constructor() {
         super("Play");
@@ -198,7 +199,7 @@ export class Play extends Phaser.Scene {
         this.scoreText = this.add.text(5, 5, "Score: 0", { fontFamily: "Arial Black", fontSize: 12, color: "#33ff33", align: 'left' }).setStroke('#333333', 1);
 
         // DEBUG TEXT
-        this.debugText = this.add.text(5, 30, "Debug", { fontFamily: "Arial Black", fontSize: 12, color: "#33ff33", align: 'left' }).setStroke('#333333', 1);
+        this.livesText = this.add.text(5, 30, "Lives: 3", { fontFamily: "Arial Black", fontSize: 12, color: "#33ff33", align: 'left' }).setStroke('#333333', 1);
     }
 
     update(time: number, delta: number) {
@@ -310,7 +311,7 @@ export class Play extends Phaser.Scene {
 
             let powerup : PowerUp = powerupGroup.get() as PowerUp;
             if (powerup) { 
-              powerup.launch(Phaser.Math.Between(50, 400), -50);     
+                powerup.launch(Phaser.Math.Between(50, 400), -50);     
             }
             
             this.lastPowerupSpawn += 10000;
@@ -383,20 +384,16 @@ export class Play extends Phaser.Scene {
         if (!player.active) return;
         if (!enemy.active) return;
 
-        player.setActive(false).setVisible(false);
         enemy.setActive(false).setVisible(false);
-
-        this.time.delayedCall(500, this.gameOver, [], this);
+        this.playerHit();
     }
 
     collidePlayerAsteroid(player: Phaser.Physics.Arcade.Sprite, asteroid: Asteroid) { 
         if (!player.active) return;
         if (!asteroid.active) return;
 
-        player.setActive(false).setVisible(false);
         asteroid.setActive(false).setVisible(false);
-
-        this.time.delayedCall(500, this.gameOver, [], this);
+        this.playerHit();
     }
 
     collidePlayerPowerUp(player: Phaser.Physics.Arcade.Sprite, powerup: PowerUp) { 
@@ -425,12 +422,24 @@ export class Play extends Phaser.Scene {
             }
         }
         else if (powerup instanceof PowerUpDefense){
-            // TODO
+            this.lives += 1;
+            
+        }
+    }
+
+    playerHit(){
+        this.lives -= 1;
+        this.livesText.text = "Lives: " + this.lives;
+
+        if (this.lives <= 0){
+            this.player.setActive(false).setVisible(false);
+            this.time.delayedCall(500, this.gameOver, [], this);
         }
     }
 
     gameOver() {
         this.scene.restart();
+        this.lives = 3;
     }
 
 }
