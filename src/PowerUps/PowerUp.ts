@@ -5,6 +5,8 @@
         public speed: number;
         public spriteTexture: string;
         public spriteScale: number = 1;
+        public animationDuration: number = 1000;
+        public animationScaleChange: number = 0.1;
 
         
         constructor( scene: Phaser.Scene, texture: string = "powerupScore", speed: number = Phaser.Math.GetSpeed(50, 1) ) {
@@ -34,6 +36,11 @@
 
         update(time: number, delta: number) {
             this.y += this.speed * delta;
+
+            // animate "heartbeat"
+            let timePhase = time % this.animationDuration;
+            let scaleOffset: number = Math.sin(timePhase / this.animationDuration * Phaser.Math.PI2) * this.animationScaleChange;
+            this.setScale(this.spriteScale + scaleOffset, this.spriteScale+ scaleOffset);
 
             if (this.y > Number(this.scene.game.config.height) + 50)
             {
