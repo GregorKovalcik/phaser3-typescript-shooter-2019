@@ -10,6 +10,8 @@
             super(scene, 0, 0, texture);
             this.spriteTexture = texture;
             this.speed = speed;
+
+            this.setDepth(100);
         }
 
         launch(x: number, y: number) : Enemy {

@@ -36,6 +36,9 @@
           this.load.image("powerupScore", "powerups/powerupBlue_star.png");
           this.load.image("powerupFirepower", "powerups/powerupBlue_bolt.png");
           this.load.image("powerupDefense", "powerups/powerupBlue_shield.png");
+
+          // environment
+          this.load.image("star", "effects/star2.png");
       }
 
       create() {

@@ -11,6 +11,7 @@ import { PowerUp } from "./PowerUps/PowerUp";
 import { PowerUpScore } from "./PowerUps/PowerUpScore";
 import { PowerUpFirepower } from "./PowerUps/PowerUpFirepower";
 import { PowerUpDefense } from "./PowerUps/PowerUpDefense";
+import { Star } from "./Environment/Star";
 
 export class Play extends Phaser.Scene {
 
@@ -41,10 +42,14 @@ export class Play extends Phaser.Scene {
     powerupsFirepower: Phaser.Physics.Arcade.Group;
     powerupsDefense: Phaser.Physics.Arcade.Group;
     
+    // we don't need physics for stars
+    stars: Phaser.GameObjects.Group;
+
 
     lastEnemySpawn: number = 0;
     lastAsteroidSpawn: number = 0;
     lastPowerupSpawn: number = 0;
+    lastStarSpawn: number = 0;
 
     score: number = 0;
     lives: number = 3;
@@ -60,10 +65,9 @@ export class Play extends Phaser.Scene {
         console.log("Play.create()");
 
         this.player = this.physics.add.sprite(320, 500, "playership1").setScale(0.5, 0.5);
-        this.player.body.collideWorldBounds=true;
+        this.player.setCollideWorldBounds(true);
         this.player.body.setSize(this.player.body.width * 0.5, this.player.body.height * 0.5);
-        // this.player.body.width *= 0.5;
-        // this.player.body.height *= 0.5;
+        this.player.setDepth(100);
 
         this.moveKeys = <{[key:string] : Phaser.Input.Keyboard.Key }> this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
@@ -167,6 +171,12 @@ export class Play extends Phaser.Scene {
             runChildUpdate: true
         });
         
+        // STARS GROUP
+        this.stars = this.add.group({
+            classType: Star,
+            maxSize: 100,
+            runChildUpdate: true
+        });
 
         // LASERS kill ENEMIES
         this.physics.add.collider(this.lasers, this.enemies1, this.collideLaserEnemy, null, this); // last parameter is the context passed into the callback
@@ -200,6 +210,16 @@ export class Play extends Phaser.Scene {
 
         // DEBUG TEXT
         this.livesText = this.add.text(5, 30, "Lives: 3", { fontFamily: "Arial Black", fontSize: 12, color: "#33ff33", align: 'left' }).setStroke('#333333', 1);
+
+        // SPAWN STARS
+        for (let i = 0; i < this.stars.maxSize; i++) {
+            let star : Star = this.stars.get() as Star;
+            if (star) { 
+                let randomX = Math.random() * Number(this.game.config.width);
+                let randomY = Math.random() * Number(this.game.config.height) + 50;
+                star.launch(randomX, randomY);     
+            }
+        }
     }
 
     update(time: number, delta: number) {
@@ -282,9 +302,9 @@ export class Play extends Phaser.Scene {
 
         if (this.lastAsteroidSpawn < 0) {
             
-            let e : Asteroid = this.asteroidsBig.get() as Asteroid;
-            if (e) { 
-              e.launch(Phaser.Math.Between(50, 400), -50);     
+            let asteroid : Asteroid = this.asteroidsBig.get() as Asteroid;
+            if (asteroid) { 
+               asteroid.launch(Phaser.Math.Between(50, 400), -50);     
             }
             
             this.lastAsteroidSpawn += 5000;
@@ -316,6 +336,7 @@ export class Play extends Phaser.Scene {
             
             this.lastPowerupSpawn += 10000;
         }
+
     }
 
     constrainVelocity(sprite: Phaser.Physics.Arcade.Sprite, maxVelocity: number)

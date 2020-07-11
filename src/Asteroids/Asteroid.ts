@@ -16,6 +16,8 @@
                 this.spriteScale = spriteScale;
             if (speed)
                 this.speed = speed;
+
+            this.setDepth(10);
         }
 
         launch(x: number, y: number, lateralSpeed: number = 0) : Asteroid {
