@@ -256,24 +256,29 @@ export class Play extends Phaser.Scene {
         asteroid.setActive(false).setVisible(false);
 
         // split big asteroids
+        let splitSpeed = 20;
         if (asteroid instanceof AsteroidBig){
-            let left : AsteroidMedium = this.asteroidsMedium.get() as AsteroidMedium;
+            let left : Asteroid = this.asteroidsMedium.get() as Asteroid;
             if (left) { 
-                left.launch(asteroid.x - 30, asteroid.y);     
+                left.launch(asteroid.x - 30, asteroid.y); 
+                left.lateralSpeed = -Phaser.Math.GetSpeed(splitSpeed, 1);    
             }
-            let right : AsteroidMedium = this.asteroidsMedium.get() as AsteroidMedium;
+            let right : Asteroid = this.asteroidsMedium.get() as Asteroid;
             if (right) { 
                 right.launch(asteroid.x + 30, asteroid.y);
+                right.lateralSpeed = Phaser.Math.GetSpeed(splitSpeed, 1);
             }
         }
         if (asteroid instanceof AsteroidMedium){
-            let left : AsteroidSmall = this.asteroidsSmall.get() as AsteroidSmall;
+            let left : Asteroid = this.asteroidsSmall.get() as Asteroid;
             if (left) { 
-                left.launch(asteroid.x - 15, asteroid.y);     
+                left.launch(asteroid.x - 15, asteroid.y);
+                left.lateralSpeed = -Phaser.Math.GetSpeed(splitSpeed, 1);    
             }
-            let right : AsteroidSmall = this.asteroidsSmall.get() as AsteroidSmall;
+            let right : Asteroid = this.asteroidsSmall.get() as Asteroid;
             if (right) { 
                 right.launch(asteroid.x + 15, asteroid.y);
+                right.lateralSpeed = Phaser.Math.GetSpeed(splitSpeed, 1);
             }
         }
     }

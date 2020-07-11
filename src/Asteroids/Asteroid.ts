@@ -3,6 +3,7 @@
     export class Asteroid extends Phaser.Physics.Arcade.Sprite {
   
         public speed: number = Phaser.Math.GetSpeed(20, 1);
+        public lateralSpeed: number = 0;
         public spriteTexture: string = "asteroidBig1";
         public spriteScale: number = 0.6;
 
@@ -37,6 +38,7 @@
 
         update(time: number, delta: number) {
             this.y += this.speed * delta;
+            this.x += this.lateralSpeed * delta;
 
             if (this.y > Number(this.scene.game.config.height) + 50)
             {
