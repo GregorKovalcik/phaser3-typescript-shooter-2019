@@ -50,8 +50,8 @@ export class Play extends Phaser.Scene {
 
     startTime: number;
     lastEnemySpawn: number = 0;
-    lastAsteroidSpawn: number = 0;
-    lastPowerupSpawn: number = 0;
+    lastAsteroidSpawn: number = 10000;
+    lastPowerupSpawn: number = 30000;
     lastStarSpawn: number = 0;
 
     score: number = 0;
@@ -324,7 +324,7 @@ export class Play extends Phaser.Scene {
         // SPAWN ASTEROID    
         this.lastAsteroidSpawn -= delta;
 
-        if (this.lastAsteroidSpawn < 0 ) {
+        if (this.lastAsteroidSpawn < 0) {
             
             let asteroid : Asteroid = this.asteroidsBig.get() as Asteroid;
             if (asteroid) { 
@@ -359,7 +359,7 @@ export class Play extends Phaser.Scene {
                 powerup.launch(Phaser.Math.Between(50, 400), -50);     
             }
             
-            this.lastPowerupSpawn += 10000;
+            this.lastPowerupSpawn += 30000;
         }
 
     }
