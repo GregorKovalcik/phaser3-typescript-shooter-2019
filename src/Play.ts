@@ -1,8 +1,8 @@
 import { Bullet } from "./Projectiles/Bullet";
 import { Enemy } from "./Enemies/Enemy";
-import { Enemy1 } from "./Enemies/Enemy1";
-import { Enemy2 } from "./Enemies/Enemy2";
-import { Enemy3 } from "./Enemies/Enemy3";
+import { EnemyStraight } from "./Enemies/EnemyStraight";
+import { EnemySideways } from "./Enemies/EnemySideways";
+import { EnemyCircular } from "./Enemies/EnemyCircular";
 import { Asteroid } from "./Asteroids/Asteroid";
 import { AsteroidBig } from "./Asteroids/AsteroidBig";
 import { AsteroidMedium } from "./Asteroids/AsteroidMedium";
@@ -118,17 +118,17 @@ export class Play extends Phaser.Scene {
 
         // ENEMY GROUP
         this.enemies1 = this.physics.add.group({
-            classType: Enemy1,
+            classType: EnemyStraight,
             maxSize: 10,
             runChildUpdate: true
         });
         this.enemies2 = this.physics.add.group({
-            classType: Enemy2,
+            classType: EnemySideways,
             maxSize: 10,
             runChildUpdate: true
         });
         this.enemies3 = this.physics.add.group({
-            classType: Enemy3,
+            classType: EnemyCircular,
             maxSize: 10,
             runChildUpdate: true
         });
@@ -423,7 +423,7 @@ export class Play extends Phaser.Scene {
         }
         else if (powerup instanceof PowerUpDefense){
             this.lives += 1;
-            
+            this.livesText.text = "Lives: " + this.lives;
         }
     }
 
