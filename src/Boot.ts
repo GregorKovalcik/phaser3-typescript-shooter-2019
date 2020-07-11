@@ -16,7 +16,7 @@
           this.load.image("bullet", "lasers/laserBlue01.png");
           
           // enemies
-          this.load.image("enemy1", "enemies/enemyBlack1.png");
+          this.load.image("enemy1", "enemies/enemyGreen1.png");
           this.load.image("enemy2", "enemies/enemyRed4.png");
           this.load.image("enemy3", "ufoRed.png");
 

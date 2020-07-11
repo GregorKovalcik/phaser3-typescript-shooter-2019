@@ -294,12 +294,12 @@ export class Play extends Phaser.Scene {
         }
 
         let gameDifficulty = Math.ceil((time - this.startTime) / 60000);
-
+        
         // SPAWN ENEMY    
         
         // enemy level 1 (default)
         this.lastEnemyLevel1Spawn -= delta;
-        if (this.lastEnemyLevel1Spawn < 0) {
+        if (this.lastEnemyLevel1Spawn < 0) {  
             let e : Enemy = this.enemies1.get() as Enemy;
             if (e) { 
                 e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60), Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1), gameDifficulty / 2);     
@@ -314,7 +314,7 @@ export class Play extends Phaser.Scene {
             if (e) { 
                 e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60), Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1), gameDifficulty / 2);     
             }
-            this.lastEnemyLevel2Spawn += 5000;
+            this.lastEnemyLevel2Spawn += 3000;
         }
 
         // enemy level 3 (after 2 minutes)
@@ -324,7 +324,7 @@ export class Play extends Phaser.Scene {
             if (e) { 
                 e.launch(Phaser.Math.Between(50, 400), Phaser.Math.Between(-40, -60), Phaser.Math.GetSpeed(Phaser.Math.Between(40, 60), 1), gameDifficulty / 2);     
             }
-            this.lastEnemyLevel3Spawn += 5000;
+            this.lastEnemyLevel3Spawn += 3000;
         }
 
 

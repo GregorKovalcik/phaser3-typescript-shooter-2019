@@ -50,7 +50,6 @@
         // return true if destroyed by the hit
         hit() : boolean {
             this.health -= 1;
-            console.log("Hit " + this.health);
             return this.health <= 0;
         }
     }
