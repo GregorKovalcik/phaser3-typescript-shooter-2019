@@ -1,6 +1,3 @@
-// STYLES
-import './style.css';
-
 // DEPENDENCIES
 import 'phaser';
 
