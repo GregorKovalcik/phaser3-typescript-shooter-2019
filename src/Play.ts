@@ -545,8 +545,8 @@ export class Play extends Phaser.Scene {
         this.isRearFireModeEnabled = false;
         this.startTime = this.time.now;
         this.lastEnemyLevel1Spawn = 0;
-        this.lastEnemyLevel2Spawn = 0;
-        this.lastEnemyLevel3Spawn = 0;
+        this.lastEnemyLevel2Spawn = 60000;
+        this.lastEnemyLevel3Spawn = 120000;
     }
 
 }
