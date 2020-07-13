@@ -26,10 +26,12 @@
             
             this.setScale(this.spriteScale, this.spriteScale);
             
-
             this.scene.physics.add.existing(this);
             this.body.setSize(this.spriteScale, this.spriteScale);
 
+            // fix for physics entities picking up random velocity (probably due to collisions?)
+            this.setVelocity(0);
+            
             this.setPosition(x, y);
             this.lateralSpeed = lateralSpeed;
 
