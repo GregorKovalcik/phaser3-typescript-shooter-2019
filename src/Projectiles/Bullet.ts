@@ -9,7 +9,6 @@
             super(scene, 0, 0, "bullet");
             this.speed = Phaser.Math.GetSpeed(300, 1);
             this.direction = new Phaser.Math.Vector2(0, -1);
-            
         }
   
         fire(x: number, y: number, angle: number = 0) {
@@ -18,10 +17,11 @@
             // We need to reinitialize the sprite here because we might have been "drawn" from the pool
             Phaser.Physics.Arcade.Sprite.call(this, this.scene, 0, 0, 'bullet');
 
-            
+            this.scene.physics.add.existing(this);
+
             // fix for physics entities picking up random velocity (probably due to collisions?)
             this.setVelocity(0);
-
+            
             this.setPosition(x, y);
             // reset rotation
             this.direction = new Phaser.Math.Vector2(0, -1);
